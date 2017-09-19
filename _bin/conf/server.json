@@ -1,0 +1,7 @@
+{
+	"LogLevel": "debug",
+	"LogPath": "",
+	"TCPAddr": "127.0.0.1:6666",
+	"WSAddr": "127.0.0.1:7777",
+	"MaxConnNum": 20000
+}
