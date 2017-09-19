@@ -31,10 +31,10 @@ func handleGameJoin(args []interface{}) {
 		if id == m.GameID {
 			game_ba.ChanRPC.Go("UserJoin", a)
 		} else {
-			ret := new(msg.S_JoinResult)
-			ret.Result = 1
-			ret.ErrorMsg = "you are inside of the game " + gameName[GameBA]
-			a.WriteMsg(&ret)
+			a.WriteMsg(&msg.S_JoinResult{
+				Result:   1,
+				ErrorMsg: "you are inside of the game " + gameName[GameBA],
+			})
 		}
 	} else {
 		switch m.GameID {

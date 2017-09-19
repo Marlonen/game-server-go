@@ -18,7 +18,7 @@ type Module struct {
 
 func (m *Module) OnInit() {
 	m.Skeleton = skeleton
-	log.Debug("game baccarat opening...")
+	log.Debug("game BA opening...")
 
 	startGame()
 }

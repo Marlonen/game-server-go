@@ -28,7 +28,6 @@ var (
 )
 
 func init() {
-	// handler(&msg.GameJoin{}, handleGameJoin)
 }
 
 func broadcastTable(message interface{}) {
@@ -55,9 +54,9 @@ func onGameFree() {
 	currStatus = StatusFree
 	currTime = TimeFree
 
-	var m msg.S_BA_GAME_FREE
-	m.TimeLeave = currTime
-	broadcastTable(&m)
+	broadcastTable(&msg.S_BA_GAME_FREE{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameChip)
 }
 
@@ -65,9 +64,9 @@ func onGameChip() {
 	currStatus = StatusChip
 	currTime = TimeChip
 
-	var m msg.S_BA_GAME_CHIP
-	m.TimeLeave = currTime
-	broadcastTable(&m)
+	broadcastTable(&msg.S_BA_GAME_CHIP{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameOpen)
 }
 
@@ -75,25 +74,25 @@ func onGameOpen() {
 	currStatus = StatusOpen
 	currTime = TimeOpen
 
-	var m msg.S_BA_GAME_OPEN
-	m.TimeLeave = currTime
-	broadcastTable(&m)
+	broadcastTable(&msg.S_BA_GAME_OPEN{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameFree)
 }
 
 func sendSceneMsg(a gate.Agent) {
 	switch currStatus {
 	case StatusFree:
-		var m msg.S_BA_SCENE_FREE
-		m.TimeLeave = currTime
-		a.WriteMsg(&m)
+		a.WriteMsg(&msg.S_BA_SCENE_FREE{
+			TimeLeave: currTime,
+		})
 	case StatusChip:
-		var m msg.S_BA_SCENE_CHIP
-		m.TimeLeave = currTime
-		a.WriteMsg(&m)
+		a.WriteMsg(&msg.S_BA_SCENE_CHIP{
+			TimeLeave: currTime,
+		})
 	case StatusOpen:
-		var m msg.S_BA_SCENE_OPEN
-		m.TimeLeave = currTime
-		a.WriteMsg(&m)
+		a.WriteMsg(&msg.S_BA_SCENE_OPEN{
+			TimeLeave: currTime,
+		})
 	}
 }

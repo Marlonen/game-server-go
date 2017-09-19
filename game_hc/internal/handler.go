@@ -8,10 +8,18 @@ import (
 	"github.com/name5566/leaf/gate"
 )
 
+//
 const (
-	STATUS_FREE = iota
-	STATUS_CHIP
-	STATUS_OPEN
+	StatusFree = iota
+	StatusChip
+	StatusOpen
+)
+
+//
+const (
+	TimeFree = 5
+	TimeChip = 7
+	TimeOpen = 9
 )
 
 var (
@@ -20,7 +28,6 @@ var (
 )
 
 func init() {
-	// handler(&msg.GameJoin{}, handleGameJoin)
 }
 
 func broadcastTable(message interface{}) {
@@ -33,46 +40,59 @@ func handler(m interface{}, h interface{}) {
 	ChanRPC.Register(reflect.TypeOf(m), h)
 }
 
-func onGameFree() {
-	currStatus = STATUS_FREE
+func startGame() {
+	onGameFree()
+	timeCountdown()
+}
 
-	var m msg.S_BA_GAME_FREE
-	m.TimeLeave = 5
-	broadcastTable(&m)
+func timeCountdown() {
+	currTime--
+	skeleton.AfterFunc(1*time.Second, timeCountdown)
+}
+
+func onGameFree() {
+	currStatus = StatusFree
+	currTime = TimeFree
+
+	broadcastTable(&msg.S_BA_GAME_FREE{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameChip)
 }
 
 func onGameChip() {
-	currStatus = STATUS_CHIP
+	currStatus = StatusChip
+	currTime = TimeChip
 
-	var m msg.S_BA_GAME_CHIP
-	m.TimeLeave = 6
-	broadcastTable(&m)
+	broadcastTable(&msg.S_BA_GAME_CHIP{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameOpen)
 }
 
 func onGameOpen() {
-	currStatus = STATUS_OPEN
+	currStatus = StatusOpen
+	currTime = TimeOpen
 
-	var m msg.S_BA_GAME_OPEN
-	m.TimeLeave = 7
-	broadcastTable(&m)
+	broadcastTable(&msg.S_BA_GAME_OPEN{
+		TimeLeave: currTime,
+	})
 	skeleton.AfterFunc(5*time.Second, onGameFree)
 }
 
 func sendSceneMsg(a gate.Agent) {
 	switch currStatus {
-	case STATUS_FREE:
-		var m msg.S_BA_SCENE_FREE
-		m.TimeLeave = 2
-		a.WriteMsg(&m)
-	case STATUS_CHIP:
-		var m msg.S_BA_SCENE_CHIP
-		m.TimeLeave = 3
-		a.WriteMsg(&m)
-	case STATUS_OPEN:
-		var m msg.S_BA_SCENE_OPEN
-		m.TimeLeave = 4
-		a.WriteMsg(&m)
+	case StatusFree:
+		a.WriteMsg(&msg.S_BA_SCENE_FREE{
+			TimeLeave: currTime,
+		})
+	case StatusChip:
+		a.WriteMsg(&msg.S_BA_SCENE_CHIP{
+			TimeLeave: currTime,
+		})
+	case StatusOpen:
+		a.WriteMsg(&msg.S_BA_SCENE_OPEN{
+			TimeLeave: currTime,
+		})
 	}
 }

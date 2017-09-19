@@ -20,7 +20,7 @@ func (m *Module) OnInit() {
 	m.Skeleton = skeleton
 	log.Debug("game baccarat opening...")
 
-	onGameFree()
+	startGame()
 }
 
 func (m *Module) OnDestroy() {
