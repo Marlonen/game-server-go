@@ -2,7 +2,8 @@ package msg
 
 func registerMsgCommon() {
 	Processor.Register(&C_GameJoin{})
-	Processor.Register(&S_JoinResult{})
+	Processor.Register(&C_GameLogin{})
+	Processor.Register(&S_HandleResult{})
 }
 
 type C_GameJoin struct {
@@ -10,7 +11,16 @@ type C_GameJoin struct {
 	RoomID int
 }
 
-type S_JoinResult struct {
+type S_HandleResult struct {
 	Result   int
 	ErrorMsg string
+}
+
+type C_GameLogin struct {
+	UserName string
+	PassWord string
+}
+
+type M_UserData struct {
+	GameID int
 }

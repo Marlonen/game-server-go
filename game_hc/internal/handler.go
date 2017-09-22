@@ -36,7 +36,7 @@ func broadcastTable(message interface{}) {
 	}
 }
 
-func handler(m interface{}, h interface{}) {
+func handleMsg(m interface{}, h interface{}) {
 	ChanRPC.Register(reflect.TypeOf(m), h)
 }
 

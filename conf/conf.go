@@ -22,3 +22,8 @@ var (
 	AsynCallLen        = 10000
 	ChanRPCLen         = 10000
 )
+
+var (
+	GameBA = 1001
+	GameHC = 1002
+)
